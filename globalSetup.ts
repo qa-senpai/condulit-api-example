@@ -4,7 +4,9 @@ import { defaultUserData } from "./tests/fixture/userData";
 import { saveToFile } from "./utils/file-utils";
 
 async function globalSetup(config: FullConfig) {
-  const context = await request.newContext();
+  const context = await request.newContext({
+    baseURL: "https://conduit-api.learnwebdriverio.com",
+  });
 
   const userController = new UserController(context);
   const isUserExist = await userController.checkIfUserExist({
@@ -26,7 +28,7 @@ async function globalSetup(config: FullConfig) {
     token = await userController.getTokenFromResponse(response);
   }
 
-  saveToFile(`.auth/${defaultUserData.email}.json`, token!);
+  saveToFile(`.auth`, `${defaultUserData.email}.json`, token!);
 }
 
 export default globalSetup;
