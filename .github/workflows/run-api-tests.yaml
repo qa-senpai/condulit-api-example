@@ -8,14 +8,6 @@ on:
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
-    inputs:
-      test_type:
-        type: "choice"
-        required: true
-        description: "choose what type of tests you want to run"
-        options:
-          - api
-          - e2e
 
 jobs:
   test:
