@@ -81,11 +81,11 @@ export class HomePage extends BasePage {
     await this.favoriteFeedByTag.click();
   }
 
-  async getLikesCount(index) {
+  async getLikesCount(index: number) {
     return this.likeFeedButton.nth(index).textContent();
   }
 
-  async likeFeed(index) {
+  async likeFeed(index: number) {
     await this.likeFeedButton.nth(index).click();
   }
 }

@@ -37,7 +37,7 @@ class Button implements Clickable {
   page;
   selector;
 
-  constructor(page, selector: string) {
+  constructor(page: Page, selector: string) {
     this.page = page;
     this.selector = selector;
   }
@@ -55,7 +55,7 @@ class Link implements Clickable {
   page;
   selector;
 
-  constructor(page, selector: string) {
+  constructor(page: Page, selector: string) {
     this.page = page;
     this.selector = selector;
   }
@@ -70,7 +70,7 @@ class Link implements Clickable {
 }
 
 interface Clickable {
-  page;
+  page: Page;
   click(): Promise<void>;
   isVisible(): Promise<boolean>;
 }
