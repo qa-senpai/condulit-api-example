@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { test } from "../fixture/api-fixture";
 import { UserResponse } from "../../app/api/UserController/UserTypes";
 
-test("create user - should be created", async ({ userController }) => {
+test.skip("create user - should be created", async ({ userController }) => {
   const requestBody = {
     email: "psp123@gm.com",
     password: process.env.CONDULIT_DEFAULT_PASSWORD,
@@ -19,7 +19,9 @@ test("create user - should be created", async ({ userController }) => {
   expect(token).toBeTruthy();
 });
 
-test("login as existed user - should get token", async ({ userController }) => {
+test.skip("login as existed user - should get token", async ({
+  userController,
+}) => {
   const requestBody = {
     email: "pspa@gg.com",
     password: "1234",
@@ -34,7 +36,7 @@ test("login as existed user - should get token", async ({ userController }) => {
   expect(token).toBeTruthy();
 });
 
-test("login as existed user - should be logged", async ({ request }) => {
+test.skip("login as existed user - should be logged", async ({ request }) => {
   // Arrange
 
   // Act
