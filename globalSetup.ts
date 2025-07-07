@@ -5,7 +5,7 @@ import { saveToFile } from "./utils/file-utils";
 
 async function globalSetup(config: FullConfig) {
   const context = await request.newContext({
-    baseURL: "https://conduit-api.learnwebdriverio.com",
+    baseURL: config.projects[0].use.baseURL,
   });
 
   const userController = new UserController(context);
