@@ -1,32 +1,32 @@
-import { chromium, expect, type FullConfig } from "@playwright/test";
-import { faker } from "@faker-js/faker";
-import { RegistrationPage } from "./app/ui/pages/RegisterPage";
-
-export function createRandomUserData() {
-  return {
-    username: faker.person.firstName().toLowerCase(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  };
-}
+import { request, type FullConfig } from "@playwright/test";
+import { UserController } from "./app/api/UserController/UserController";
+import { defaultUserData } from "./tests/fixture/userData";
+import { saveToFile } from "./utils/file-utils";
 
 async function globalSetup(config: FullConfig) {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-  const userData = createRandomUserData();
-  const registerPage = new RegistrationPage(page);
-  await page.goto("https://demo.learnwebdriverio.com/register");
-  await registerPage.registerUser(userData);
+  const context = await request.newContext();
 
-  await expect(page.locator('[data-qa-id="site-nav"]')).toContainText(
-    userData.username
-  );
+  const userController = new UserController(context);
+  const isUserExist = await userController.checkIfUserExist({
+    email: defaultUserData.email,
+    password: defaultUserData.password,
+  });
 
-  await page
-    .context()
-    .storageState({ path: ".auth/storage-state.json" as string });
+  let token;
 
-  await browser.close();
+  if (!isUserExist) {
+    const response = await userController.createUser(defaultUserData);
+    token = await userController.getTokenFromResponse(response);
+  } else {
+    const response = await userController.login({
+      email: defaultUserData.email,
+      password: defaultUserData.password,
+    });
+
+    token = await userController.getTokenFromResponse(response);
+  }
+
+  saveToFile(`.auth/${defaultUserData.email}.json`, token!);
 }
 
 export default globalSetup;

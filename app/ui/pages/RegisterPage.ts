@@ -1,28 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
 
-// export function RegistrationPage1(page: Page) {
-//   this.usernameInputLocator = page.getByRole("textbox", { name: "Username" });
-//   this.emailInputLocator = page.getByRole("textbox", { name: "Email" });
-//   this.passwordInputLocator = page.getByRole("textbox", { name: "Password" });
-//   this.signUpButtonLocator = page.getByRole("button", { name: "Sign up" });
-
-//   this.registerUser = async function (
-//     username: string,
-//     email: string,
-//     password: string
-//   ) {
-//     await this.usernameInputLocator.fill(username);
-//     await this.emailInputLocator.fill(email);
-//     await this.passwordInputLocator.fill(password);
-//     await this.signUpButtonLocator.click();
-//   };
-// }
-
-// модифікатори доступ
-// private, protected, public
-// static, abstract
-
 export class RegistrationPage extends BasePage {
   private usernameInputLocator: Locator;
   private emailInputLocator: Locator;

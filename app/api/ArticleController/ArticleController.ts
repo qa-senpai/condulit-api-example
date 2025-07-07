@@ -1,13 +1,7 @@
-import { APIRequestContext } from "@playwright/test";
 import { Article, ArticlesCreation } from "./ArticleTypes";
+import { BaseApiController } from "../BaseController";
 
-export class ArticleController {
-  private request: APIRequestContext;
-
-  constructor(request: APIRequestContext) {
-    this.request = request;
-  }
-
+export class ArticleController extends BaseApiController {
   async createArticle(
     articleData: Article,
     options: {
@@ -18,13 +12,10 @@ export class ArticleController {
       article: articleData,
     };
 
-    const response = await this.request.post(
-      "https://conduit-api.learnwebdriverio.com/api/articles",
-      {
-        data: requestBody,
-        failOnStatusCode: true,
-      }
-    );
+    const response = await this.request.post("/api/articles", {
+      data: requestBody,
+      failOnStatusCode: true,
+    });
 
     if (options.registerToCleanup === true) {
       const json = await response.json();
@@ -36,11 +27,10 @@ export class ArticleController {
   }
 
   async delete(slug: string) {
-    const response = await this.request.delete(
-      `https://conduit-api.learnwebdriverio.com/api/articles/${slug}`,
-      {
-        failOnStatusCode: true,
-      }
-    );
+    const response = await this.request.delete(`/api/articles/${slug}`, {
+      failOnStatusCode: true,
+    });
+
+    return response;
   }
 }

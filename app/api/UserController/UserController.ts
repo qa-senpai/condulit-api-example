@@ -1,22 +1,22 @@
 import { APIRequestContext, APIResponse, expect } from "@playwright/test";
 import { User, UserRequest, UserResponse } from "./UserTypes";
+import { BaseApiController } from "../BaseController";
 
-export class UserController {
-  request: APIRequestContext;
-
-  constructor(request: APIRequestContext) {
-    this.request = request;
-  }
-
+export class UserController extends BaseApiController {
   async login(userData: { email: string; password: string }) {
-    const response = await this.request.post(
-      "https://conduit-api.learnwebdriverio.com/api/users/login",
-      {
-        data: { user: userData },
-      }
-    );
+    const response = await this.request.post("/api/users/login", {
+      data: { user: userData },
+    });
 
     return response;
+  }
+
+  async checkIfUserExist(userData: { email: string; password: string }) {
+    const response = await this.login(userData);
+
+    if (response.ok()) {
+      return true;
+    } else return false;
   }
 
   async createUser(userData: User) {
@@ -24,13 +24,10 @@ export class UserController {
       user: userData,
     };
 
-    const response = await this.request.post(
-      "https://conduit-api.learnwebdriverio.com/api/users",
-      {
-        data: body,
-        failOnStatusCode: true,
-      }
-    );
+    const response = await this.request.post("/api/users", {
+      data: body,
+      failOnStatusCode: true,
+    });
 
     return response;
   }

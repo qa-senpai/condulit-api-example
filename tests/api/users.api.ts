@@ -38,12 +38,9 @@ test("login as existed user - should be logged", async ({ request }) => {
   // Arrange
 
   // Act
-  const response = await request.post(
-    "https://conduit-api.learnwebdriverio.com/api/users/login",
-    {
-      data: { user: { email: "pspa@gg.com", password: "1234" } },
-    }
-  );
+  const response = await request.post("/api/users/login", {
+    data: { user: { email: "pspa@gg.com", password: "1234" } },
+  });
 
   const state = await request.storageState();
   fs.writeFileSync(".auth/logged-user.json", JSON.stringify(state));

@@ -8,17 +8,18 @@ import { request as newRequest } from "@playwright/test";
 type ApiControllers = {
   userController: UserController;
   articleController: ArticleController;
-  token: string;
-  userToLogin: string | undefined;
+  userToLoginEmail: string | undefined;
 };
 
 export const test = base.extend<ApiControllers>({
-  userToLogin: undefined,
+  userToLoginEmail: undefined,
 
-  request: async ({ request, userToLogin }, use) => {
-    if (userToLogin) {
-      if (fs.existsSync(".auth/token.json")) {
-        const token = fs.readFileSync(".auth/token.json", { encoding: "utf8" });
+  request: async ({ request, userToLoginEmail }, use) => {
+    if (userToLoginEmail) {
+      if (fs.existsSync(`.auth/${userToLoginEmail}.json`)) {
+        const token = fs.readFileSync(`.auth/${userToLoginEmail}.json`, {
+          encoding: "utf8",
+        });
 
         const context = await newRequest.newContext({
           extraHTTPHeaders: {
@@ -28,22 +29,19 @@ export const test = base.extend<ApiControllers>({
 
         await use(context);
       } else {
-        const response = await request.post(
-          "https://conduit-api.learnwebdriverio.com/api/users/login",
-          {
-            data: {
-              user: {
-                email: userToLogin,
-                password: process.env.CONDULIT_DEFAULT_PASSWORD,
-              },
+        const response = await request.post("/api/users/login", {
+          data: {
+            user: {
+              email: userToLoginEmail,
+              password: process.env.CONDULIT_DEFAULT_PASSWORD,
             },
-            failOnStatusCode: true,
-          }
-        );
+          },
+          failOnStatusCode: true,
+        });
 
         const responseJson: UserResponse = await response.json();
         const token = responseJson.user.token;
-        fs.writeFileSync(".auth/token.json", token!);
+        fs.writeFileSync(`.auth/${userToLoginEmail}.json`, token!);
 
         const context = await newRequest.newContext({
           extraHTTPHeaders: {
@@ -57,7 +55,9 @@ export const test = base.extend<ApiControllers>({
 
     // cleanup
     if (global.registeredArticles.length > 0) {
-      const token = fs.readFileSync(".auth/token.json", { encoding: "utf8" });
+      const token = fs.readFileSync(`.auth/${userToLoginEmail}.json`, {
+        encoding: "utf8",
+      });
 
       const context = await newRequest.newContext({
         extraHTTPHeaders: {

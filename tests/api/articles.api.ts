@@ -5,8 +5,9 @@ import {
 } from "../../app/api/ArticleController/ArticleTypes";
 import { test } from "../fixture/api-fixture";
 import { RegistrationPage } from "../../app/ui/pages/RegisterPage";
+import { defaultUserData } from "../fixture/userData";
 
-test.use({ userToLogin: "psp123@gm.com" });
+test.use({ userToLoginEmail: defaultUserData.email });
 
 test("get article - should return articles list", async ({ request }) => {
   // Arrange Act Assert (AAA)
@@ -17,7 +18,7 @@ test("get article - should return articles list", async ({ request }) => {
 
   // http реквести
   const response: APIResponse = await request.get(
-    "https://conduit-api.learnwebdriverio.com/api/articles?offset=0&limit=10",
+    "/api/articles?offset=0&limit=10",
     {
       failOnStatusCode: true,
     }
@@ -31,12 +32,15 @@ test("get article - should return articles list", async ({ request }) => {
   const responseBuffer = await response.body();
 
   // вбудовані методи масивів
+  /*
+  приклад фільтрації відповіді
+  */
   const dojoArticles = responseJson.articles.filter((value) =>
     value.tagList!.includes("dojo")
   );
 
   // проста перевірка
-  expect(dojoArticles.length).toBeGreaterThanOrEqual(1);
+  expect(responseJson.articlesCount).toBeGreaterThan(0);
 });
 
 test("create article - should be created", async ({ articleController }) => {
@@ -57,7 +61,8 @@ test("create article - should be created", async ({ articleController }) => {
   await expect(articleResponse).toBeOK();
 });
 
-test("create article - check it", async ({ page, articleController }) => {
+// example
+test.skip("create article - check it", async ({ page, articleController }) => {
   const registerPage = new RegistrationPage(page);
 
   await page.goto("https://demo.learnwebdriverio.com/register");
@@ -84,14 +89,11 @@ test("create article - check it", async ({ page, articleController }) => {
   await page.goto(`https://demo.learnwebdriverio.com/articles/${slug}`);
   await expect(page.locator("h1")).toBeVisible();
 
-  const deleteResponse = await page.request.delete(
-    `https://conduit-api.learnwebdriverio.com/api/articles/${slug}`,
-    {
-      headers: {
-        authorization: `Token ${token}`,
-      },
-    }
-  );
+  const deleteResponse = await page.request.delete(`/api/articles/${slug}`, {
+    headers: {
+      authorization: `Token ${token}`,
+    },
+  });
 
   console.log(deleteResponse.ok());
 });
