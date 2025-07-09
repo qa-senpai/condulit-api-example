@@ -7,6 +7,7 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 global.registeredArticles = [];
 
 console.log(process.env.WORKERS_COUNT);
+console.log(typeof process.env.WORKERS_COUNT);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
