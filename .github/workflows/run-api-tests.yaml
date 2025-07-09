@@ -8,6 +8,11 @@ on:
         type: number
         default: 3
 
+      base_url:
+        description: "Base url for environment where tests will be executed"
+        type: string
+        default: https://conduit-api.learnwebdriverio.com
+
 jobs:
   test:
     timeout-minutes: 60
