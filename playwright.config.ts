@@ -19,7 +19,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 1,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : 1,
+  workers: process.env.WORKERS_COUNT ? process.env.WORKERS_COUNT : 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
 
@@ -35,7 +35,11 @@ export default defineConfig({
   projects: [
     {
       name: "api",
-      use: { baseURL: "https://conduit-api.learnwebdriverio.com" },
+      use: {
+        baseURL: process.env.BASE_URL
+          ? process.env.BASE_URL
+          : "https://conduit-api.learnwebdriverio.com",
+      },
       testDir: "tests/api",
       testMatch: "**/*.@(api).?(c|m)[jt]s?(x)",
     },
