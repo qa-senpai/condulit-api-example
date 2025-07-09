@@ -18,8 +18,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
-      WORKERS_COUNT: 3
-      BASE_URL: https://conduit-api.learnwebdriverio.com
+      WORKERS_COUNT: ${{ inputs.workers_count }}
+      BASE_URL: ${{ inputs.base_url }}
       CONDULIT_DEFAULT_PASSWORD: ${{ secrets.CONDULIT_DEFAULT_PASSWORD }}
 
     steps:
