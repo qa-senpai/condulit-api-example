@@ -2,6 +2,11 @@ name: Run API Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      workers_count:
+        description: "Provide number of workers that will be used for test execution"
+        type: number
+        default: 3
 
 jobs:
   test:
