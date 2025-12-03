@@ -16,6 +16,9 @@ export const test = base.extend<ApiControllers>({
 
   request: async ({ request, userToLoginEmail }, use) => {
     if (userToLoginEmail) {
+      console.log(
+        `переданий ${userToLoginEmail}, виконується блок коду коли переданий userToLogin`
+      );
       if (fs.existsSync(`.auth/${userToLoginEmail}.json`)) {
         const token = fs.readFileSync(`.auth/${userToLoginEmail}.json`, {
           encoding: "utf8",
@@ -26,6 +29,8 @@ export const test = base.extend<ApiControllers>({
             authorization: `Token ${token}`,
           },
         });
+
+        console.log(`блок коду userToLogin завершив виконання `);
 
         await use(context);
       } else {
@@ -52,9 +57,14 @@ export const test = base.extend<ApiControllers>({
         await use(context);
       }
     } else await use(request);
+    console.log(`тест завершився, починається клінап`);
 
     // cleanup
     if (global.registeredArticles.length > 0) {
+      console.log(
+        `в середині registeredArticles = ${global.registeredArticles.length} сутностей`
+      );
+
       const token = fs.readFileSync(`.auth/${userToLoginEmail}.json`, {
         encoding: "utf8",
       });

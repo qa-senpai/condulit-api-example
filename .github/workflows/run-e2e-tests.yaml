@@ -1,4 +1,4 @@
-name: Run API Tests
+name: Run E2E Tests
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       workers_count:
         description: "Provide number of workers that will be used for test execution"
         type: number
-        default: 3
+        default: 5
 
       base_url:
         description: "Base url for environment where tests will be executed"
@@ -30,8 +30,10 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
-      - name: Run Playwright tests
-        run: npx playwright test --project=api
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright E2E tests
+        run: npx playwright test --project=e2e --browser=chromium
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
