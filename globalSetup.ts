@@ -1,34 +1,23 @@
-import { request, type FullConfig } from "@playwright/test";
-import { UserController } from "./app/api/UserController/UserController";
-import { defaultUserData } from "./tests/fixture/userData";
-import { saveToFile } from "./utils/file-utils";
+import { chromium, expect, request, type FullConfig } from "@playwright/test";
+import { SignInPage } from "./app/ui/pages/SignInPage";
 
 async function globalSetup(config: FullConfig) {
-  const context = await request.newContext({
-    baseURL: config.projects[0].use.baseURL,
+  console.log("--starting global setup--");
+  const browser = await chromium.launch();
+  const context = await browser.newContext({
+    baseURL: "https://demo.learnwebdriverio.com",
   });
+  const page = await context.newPage();
+  const signInPage = new SignInPage(page);
 
-  const userController = new UserController(context);
-  const isUserExist = await userController.checkIfUserExist({
-    email: defaultUserData.email,
-    password: defaultUserData.password,
-  });
+  await signInPage.navigateToSignInPage();
+  await signInPage.fillInputFields({ email: "psp@gm.com", password: "1234" });
+  await signInPage.clickSignUpButton();
+  await expect(page.locator(`[href='/']`).first()).toBeVisible();
 
-  let token;
-
-  if (!isUserExist) {
-    const response = await userController.createUser(defaultUserData);
-    token = await userController.getTokenFromResponse(response);
-  } else {
-    const response = await userController.login({
-      email: defaultUserData.email,
-      password: defaultUserData.password,
-    });
-
-    token = await userController.getTokenFromResponse(response);
-  }
-
-  saveToFile(`.auth`, `${defaultUserData.email}.json`, token!);
+  await page.waitForTimeout(3000);
+  await page.context().storageState({ path: "./storageState.json" });
+  console.log("--finishing global setup--");
 }
 
 export default globalSetup;

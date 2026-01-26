@@ -4,7 +4,7 @@ import { BasePage } from "./BasePage";
 export class RegistrationPage extends BasePage {
   private usernameInputLocator: Locator;
   private emailInputLocator: Locator;
-  private signUpButton: Button;
+  private signUpButton: Locator;
   private passwordInputLocator: Locator;
 
   constructor(page: Page) {
@@ -16,7 +16,7 @@ export class RegistrationPage extends BasePage {
     this.passwordInputLocator = this.page.getByRole("textbox", {
       name: "Password",
     });
-    this.signUpButton = new Button(page, ".btn");
+    this.signUpButton = this.page.locator(".btn");
   }
 
   public async registerUser(userData: UserRegistrationData) {
@@ -31,46 +31,4 @@ interface UserRegistrationData {
   username: string;
   email: string;
   password: string;
-}
-
-class Button implements Clickable {
-  page;
-  selector;
-
-  constructor(page: Page, selector: string) {
-    this.page = page;
-    this.selector = selector;
-  }
-
-  async click(): Promise<void> {
-    await this.page.locator(this.selector).click();
-  }
-
-  async isVisible(): Promise<boolean> {
-    return this.page.locator(this.selector).isVisible();
-  }
-}
-
-class Link implements Clickable {
-  page;
-  selector;
-
-  constructor(page: Page, selector: string) {
-    this.page = page;
-    this.selector = selector;
-  }
-
-  async click(): Promise<void> {
-    await this.page.locator(this.selector).click();
-  }
-
-  async isVisible(): Promise<boolean> {
-    return this.page.locator(this.selector).isVisible();
-  }
-}
-
-interface Clickable {
-  page: Page;
-  click(): Promise<void>;
-  isVisible(): Promise<boolean>;
 }
