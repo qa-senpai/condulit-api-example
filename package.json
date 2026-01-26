@@ -2,15 +2,40 @@
   "name": "qa-dojo-practice-pw",
   "version": "10.41",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run lint && npm run format:check"
+  },
   "author": "Pavlo Safonov",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
     "@faker-js/faker": "^9.8.0",
-    "@playwright/test": "^1.53.2",
+    "@playwright/test": "^1.57.0",
     "@types/node": "^22.15.15",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
     "dotenv": "^16.6.1",
-    "is-even-check-new": "^1.0.1"
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.4.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "is-even-check-new": "^1.0.1",
+    "jiti": "^2.6.1",
+    "prettier": "^3.7.4",
+    "typescript-eslint": "^8.51.0"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0",
+    "playwright-extra": "^4.3.6",
+    "playwright-extra-plugin-stealth": "^0.0.1",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "typescript": "^5.9.3"
   }
 }
